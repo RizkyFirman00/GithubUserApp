@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Submission1</string>
+    <string name="title_toolbar">Github User</string>
+    <string name="search">Search</string>
+    <string name="job">Pekerjaan :</string>
+    <string name="job2">Jenis Pekerjaan</string>
+    <string name="name">Nama</string>
+    <string name="username">Username</string>
+    <string name="followers">Followers :</string>
+    <string name="followers_tab">Followers</string>
+    <string name="jumlah_followers">0</string>
+    <string name="following">Following :</string>
+    <string name="following_tab">Following</string>
+    <string name="jumlah_following">0</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="avatar_user">Avatar User</string>
+    <string name="title">Github User</string>
+</resources>
