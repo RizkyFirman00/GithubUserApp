@@ -47,11 +47,11 @@
                 android:layout_marginTop="10dp"
                 android:elevation="10dp"
                 android:fontFamily="@font/inter_bold"
-                tools:text="@string/name"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@+id/cardView2"
                 app:layout_constraintStart_toStartOf="@+id/cardView2"
-                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView2"
+                tools:text="@string/name" />
 
             <TextView
                 android:id="@+id/txtUsernameDetail"
@@ -69,28 +69,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="55dp"
-                android:background="#3C3C3C3C"
-                app:layout_constraintEnd_toEndOf="@+id/txtFollowingDetail"
-                app:layout_constraintStart_toStartOf="@+id/txtFollowersDetail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtUsernameDetail"
-                app:tabSelectedTextColor="?attr/colorOnSecondary"
-                app:tabTextColor="?attr/colorOnSecondary" />
+                app:tabIndicatorColor="@color/naturalBlack"
+                app:tabIndicatorGravity="bottom"
+                app:tabSelectedTextColor="@color/purple_500" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#3C3C3C3C"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tabs" />
+                app:layout_constraintTop_toBottomOf="@id/tabs" />
 
             <TextView
                 android:id="@+id/txtFollowersDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="3dp"
                 android:text="@string/jumlah_followers"
+                android:fontFamily="@font/inter_bold"
                 app:layout_constraintBottom_toTopOf="@+id/tabs"
                 app:layout_constraintEnd_toStartOf="@+id/progressBar"
                 app:layout_constraintStart_toStartOf="@+id/view_pager" />
@@ -99,8 +102,9 @@
                 android:id="@+id/txtFollowingDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="3dp"
                 android:text="@string/jumlah_following"
+                android:fontFamily="@font/inter_bold"
                 app:layout_constraintBottom_toTopOf="@+id/tabs"
                 app:layout_constraintEnd_toEndOf="@+id/view_pager"
                 app:layout_constraintStart_toEndOf="@+id/progressBar" />
@@ -121,5 +125,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnFavorite"
+        android:contentDescription="@string/title_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_favorite_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:tint="@color/white"
+        android:backgroundTint="@color/purple_500"
+        android:layout_margin="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

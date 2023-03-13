@@ -1,11 +1,10 @@
 package com.example.submission1.viewModel
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.submission1.ResultMain
 import com.example.submission1.api.ApiClient
+import com.example.submission1.localData.SettingPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -13,9 +12,11 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-class ViewModelMain : ViewModel() {
+class ViewModelMain(private val preferences: SettingPreferences) : ViewModel() {
 
     val resultMainModel = MutableLiveData<ResultMain>()
+
+    fun getTheme() = preferences.getThemeSetting().asLiveData()
 
     fun getDataUser() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -66,5 +67,11 @@ class ViewModelMain : ViewModel() {
                 }
             }
         }
+    }
+
+    class Factory(private val preferences: SettingPreferences) :
+        ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            ViewModelMain(preferences) as T
     }
 }

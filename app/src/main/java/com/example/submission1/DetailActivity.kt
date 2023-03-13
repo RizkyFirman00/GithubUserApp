@@ -1,24 +1,31 @@
 package com.example.submission1
 
+import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.submission1.databinding.ActivityDetailBinding
+import com.example.submission1.localData.DbModule
 import com.example.submission1.model.GithubDetailResponse
+import com.example.submission1.model.GithubUserResponse
 import com.example.submission1.viewModel.ViewModelDetail
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
-    private val viewModel by viewModels<ViewModelDetail>()
+    private val viewModel by viewModels<ViewModelDetail>{
+        ViewModelDetail.Factory(DbModule(this))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +35,8 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = resources.getString(R.string.title)
 
-        val username = intent.getStringExtra("username") ?: ""
+        val item = intent.getParcelableExtra<GithubUserResponse.Item>("item")
+        val username = item?.login ?: ""
 
         viewModel.resultDetailModel.observe(this) {
             when (it) {
@@ -91,6 +99,22 @@ class DetailActivity : AppCompatActivity() {
         })
 
         viewModel.getDataDetailFollower(username)
+
+        viewModel.resultSuccessFavorite.observe(this){
+            binding.btnFavorite.changeIconColor(R.color.red)
+        }
+
+        viewModel.resultDeleteFavorite.observe(this){
+            binding.btnFavorite.changeIconColor(R.color.white)
+        }
+
+        binding.btnFavorite.setOnClickListener{
+            viewModel.setFavorite(item)
+        }
+
+        viewModel.findFavorite(item?.id ?: 0){
+            binding.btnFavorite.changeIconColor(R.color.red)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -105,5 +129,10 @@ class DetailActivity : AppCompatActivity() {
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    fun FloatingActionButton.changeIconColor(@ColorRes color:Int) {
+        val color = ContextCompat.getColor(this.context, color)
+        imageTintList = ColorStateList.valueOf(color)
     }
 }

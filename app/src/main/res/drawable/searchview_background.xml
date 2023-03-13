@@ -7,5 +7,5 @@
 
     <stroke
         android:width= "3dp"
-        android:color= "#3C3C3C" />
+        android:color= "@color/purple_500" />
 </shape>
