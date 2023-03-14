@@ -95,28 +95,28 @@ class ViewModelDetail(private val db: DbModule) : ViewModel() {
         }
     }
 
-    fun getDataDetailFollowing(username: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            launch(Dispatchers.Main) {
-                flow {
-                    val response = ApiClient
-                        .githubUserResponse
-                        .getGithubDetailFollowing(username)
+    fun setDataDetailFollowing(username: String) {
+        viewModelScope.launch {
+            flow {
+                val response = ApiClient
+                    .githubUserResponse
+                    .getGithubDetailFollowing(username)
 
-                    emit(response)
-                }.onStart {
-                    resultDetailFollowingModel.value = ResultMain.Loading(true)
-                }.onCompletion {
-                    resultDetailFollowingModel.value = ResultMain.Loading(false)
-                }.catch {
-                    Log.e("Error", it.message.toString())
-                    resultDetailFollowingModel.value = ResultMain.Error(it)
-                }.collect {
-                    resultDetailFollowingModel.value = ResultMain.Success(it)
-                }
+                emit(response)
+            }.onStart {
+                resultDetailFollowingModel.value = ResultMain.Loading(true)
+            }.onCompletion {
+                resultDetailFollowingModel.value = ResultMain.Loading(false)
+            }.catch {
+                Log.e("Error", it.message.toString())
+                resultDetailFollowingModel.value = ResultMain.Error(it)
+            }.collect {
+                resultDetailFollowingModel.value = ResultMain.Success(it)
             }
         }
     }
+
+    fun getDataDetailFollowing(): MutableLiveData<ResultMain> = resultDetailFollowingModel
 
     class Factory(private val db: DbModule) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = ViewModelDetail(db) as T

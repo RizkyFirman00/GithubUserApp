@@ -45,8 +45,8 @@ class DetailActivity : AppCompatActivity() {
                     with(binding) {
                         txtNameDetail.text = user.name
                         txtUsernameDetail.text = user.login
-                        txtFollowersDetail.text = user.followers.toString()
-                        txtFollowingDetail.text = user.following.toString()
+                        txtFollowersDetail.text = getString(R.string.num_followers)+" : "+user.followers.toString()
+                        txtFollowingDetail.text = getString(R.string.num_followings)+" : "+user.following.toString()
                         Glide.with(this@DetailActivity)
                             .load(user.avatar_url)
                             .into(imgPhotoDetail)
@@ -61,7 +61,6 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         viewModel.getDataDetailUser(username)
-
 
         val titleFragment = mutableListOf(
             getString(R.string.followers_tab),
@@ -86,7 +85,8 @@ class DetailActivity : AppCompatActivity() {
                         viewModel.getDataDetailFollower(username)
                     }
                     1 -> {
-                        viewModel.getDataDetailFollowing(username)
+                        viewModel.setDataDetailFollowing(username)
+                        viewModel.getDataDetailFollowing()
                     }
                 }
             }
@@ -97,7 +97,6 @@ class DetailActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
-
         viewModel.getDataDetailFollower(username)
 
         viewModel.resultSuccessFavorite.observe(this){

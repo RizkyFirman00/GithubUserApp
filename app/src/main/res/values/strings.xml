@@ -20,4 +20,6 @@
     <string name="dark">Dark</string>
     <string name="theme">Theme</string>
     <string name="enter_username">Enter Username</string>
+    <string name="num_followers"> Followers</string>
+    <string name="num_followings"> Followings</string>
 </resources>

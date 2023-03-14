@@ -32,5 +32,5 @@ object ApiClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val githubUserResponse = retrofit.create(ApiService::class.java)!!
+    val githubUserResponse = retrofit.create(ApiService::class.java)
 }
