@@ -5,14 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.submission1.databinding.FragmentRvFollowBinding
-import com.example.submission1.model.GithubUserResponse
 import com.example.submission1.viewModel.ViewModelDetail
 
-class RvFollowFragment : Fragment() {
+class FollowAdapterFragment : Fragment() {
 
     var type = 0
     private var binding: FragmentRvFollowBinding? = null
@@ -22,8 +20,7 @@ class RvFollowFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentRvFollowBinding.inflate(layoutInflater)
         return binding?.root
@@ -35,35 +32,29 @@ class RvFollowFragment : Fragment() {
         binding?.rvPeople?.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             setHasFixedSize(true)
-            adapter = this@RvFollowFragment.adapter
+            adapter = this@FollowAdapterFragment.adapter
         }
 
-        when (type) {
-            FOLLOWERS -> {
-                viewModel.resultDetailFollowerModel.observe(viewLifecycleOwner, this::resultFollow)
+        showLoading(true)
+        viewModel.resultDetailFollowerModel.observe(viewLifecycleOwner) {
+            if (it != null) {
+                adapter.setData(it)
+                showLoading(false)
             }
-            FOLLOWING -> {
-                viewModel.resultDetailFollowingModel.observe(viewLifecycleOwner, this::resultFollow)
+        }
+
+        showLoading(true)
+        viewModel.resultDetailFollowingModel.observe(viewLifecycleOwner) {
+            if (it != null) {
+                adapter.setData(it)
+                showLoading(false)
             }
         }
     }
 
-    private fun resultFollow(state: ResultMain) {
-        when (state) {
-            is ResultMain.Success<*> -> {
-                adapter.setData(state.data as MutableList<GithubUserResponse.Item>)
-            }
-            is ResultMain.Error -> {
-                Toast.makeText(
-                    requireActivity(),
-                    state.exception.message.toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            is ResultMain.Loading -> {
-                showLoading(state.isLoading)
-            }
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -77,10 +68,9 @@ class RvFollowFragment : Fragment() {
     companion object {
         const val FOLLOWERS = 10
         const val FOLLOWING = 11
-        fun newInstance(type: Int): RvFollowFragment = RvFollowFragment()
-            .apply {
-                this.type = type
-            }
+        fun newInstance(type: Int): FollowAdapterFragment = FollowAdapterFragment().apply {
+            this.type = type
+        }
     }
 
 }

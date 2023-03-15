@@ -2,8 +2,6 @@
     <string name="app_name">Submission1</string>
     <string name="title_toolbar">Github User</string>
     <string name="search">Search</string>
-    <string name="job">Pekerjaan :</string>
-    <string name="job2">Jenis Pekerjaan</string>
     <string name="name">Nama</string>
     <string name="username">Username</string>
     <string name="followers">Followers :</string>
@@ -20,6 +18,4 @@
     <string name="dark">Dark</string>
     <string name="theme">Theme</string>
     <string name="enter_username">Enter Username</string>
-    <string name="num_followers"> Followers</string>
-    <string name="num_followings"> Followings</string>
 </resources>

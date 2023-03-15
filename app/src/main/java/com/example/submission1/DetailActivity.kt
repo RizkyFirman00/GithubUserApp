@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
@@ -13,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.submission1.databinding.ActivityDetailBinding
 import com.example.submission1.localData.DbModule
-import com.example.submission1.model.GithubDetailResponse
 import com.example.submission1.model.GithubUserResponse
 import com.example.submission1.viewModel.ViewModelDetail
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,6 +19,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailActivity : AppCompatActivity() {
+
 
     private lateinit var binding: ActivityDetailBinding
     private val viewModel by viewModels<ViewModelDetail>{
@@ -38,29 +37,20 @@ class DetailActivity : AppCompatActivity() {
         val item = intent.getParcelableExtra<GithubUserResponse.Item>("item")
         val username = item?.login ?: ""
 
-        viewModel.resultDetailModel.observe(this) {
-            when (it) {
-                is ResultMain.Success<*> -> {
-                    val user = it.data as GithubDetailResponse
-                    with(binding) {
-                        txtNameDetail.text = user.name
-                        txtUsernameDetail.text = user.login
-                        txtFollowersDetail.text = getString(R.string.num_followers)+" : "+user.followers.toString()
-                        txtFollowingDetail.text = getString(R.string.num_followings)+" : "+user.following.toString()
-                        Glide.with(this@DetailActivity)
-                            .load(user.avatar_url)
-                            .into(imgPhotoDetail)
-                    }
-                }
-                is ResultMain.Error -> {
-                    Toast.makeText(this, it.exception.message.toString(), Toast.LENGTH_SHORT).show()
-                }
-                is ResultMain.Loading -> {
-                    showLoading(it.isLoading)
+        viewModel.setDataDetailUser(username)
+        viewModel.getDataDetailUser().observe(this){
+            if (it != null){
+                binding.apply {
+                    txtNameDetail.text = it.name
+                    txtUsernameDetail.text = it.login
+                    txtFollowersDetail.text = "Followers : ${it.followers}"
+                    txtFollowingDetail.text = "Following : ${it.following}"
+                    Glide.with(this@DetailActivity)
+                        .load(item?.avatar_url)
+                        .into(imgPhotoDetail)
                 }
             }
         }
-        viewModel.getDataDetailUser(username)
 
         val titleFragment = mutableListOf(
             getString(R.string.followers_tab),
@@ -68,8 +58,8 @@ class DetailActivity : AppCompatActivity() {
         )
 
         val fragment = mutableListOf<Fragment>(
-            RvFollowFragment.newInstance(RvFollowFragment.FOLLOWERS),
-            RvFollowFragment.newInstance(RvFollowFragment.FOLLOWING)
+            FollowAdapterFragment.newInstance(FollowAdapterFragment.FOLLOWERS),
+            FollowAdapterFragment.newInstance(FollowAdapterFragment.FOLLOWING)
         )
 
         val adapter = DetailUserAdapter(this, fragment)
@@ -82,11 +72,16 @@ class DetailActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
                     0 -> {
-                        viewModel.getDataDetailFollower(username)
+                        showLoading(true)
+                        viewModel.setDataDetailFollower(username)
+                        viewModel.getDataDetailFollower()
+                        showLoading(false)
                     }
                     1 -> {
+                        showLoading(true)
                         viewModel.setDataDetailFollowing(username)
                         viewModel.getDataDetailFollowing()
+                        showLoading(false)
                     }
                 }
             }
@@ -97,7 +92,8 @@ class DetailActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
-        viewModel.getDataDetailFollower(username)
+        viewModel.setDataDetailFollower(username)
+        viewModel.getDataDetailFollower()
 
         viewModel.resultSuccessFavorite.observe(this){
             binding.btnFavorite.changeIconColor(R.color.red)

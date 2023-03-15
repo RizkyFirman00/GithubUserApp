@@ -6,14 +6,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.submission1.databinding.ActivityMainBinding
 import com.example.submission1.localData.SettingPreferences
-import com.example.submission1.model.GithubUserResponse
 import com.example.submission1.viewModel.ViewModelMain
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val adapter by lazy {
-        UserAdapter {user ->
+        UserAdapter { user ->
             Intent(this, DetailActivity::class.java).apply {
                 putExtra("item", user)
                 startActivity(this)
@@ -29,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val viewModel by viewModels<ViewModelMain>{
+    private val viewModel by viewModels<ViewModelMain> {
         ViewModelMain.Factory(SettingPreferences(this))
     }
 
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel.getTheme().observe(this) {
-            if(it){
+            if (it) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -53,8 +51,11 @@ class MainActivity : AppCompatActivity() {
         binding.rvPeople.adapter = adapter
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                viewModel.searchUserData(p0.toString())
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    showLoading(true)
+                    viewModel.searchUserData(query.toString())
+                }
                 return true
             }
 
@@ -62,22 +63,14 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
-
-        viewModel.resultMainModel.observe(this) {
-            when (it) {
-                is ResultMain.Success<*> -> {
-                    adapter.setData(it.data as MutableList<GithubUserResponse.Item>)
-                }
-                is ResultMain.Error -> {
-                    Toast.makeText(this, it.exception.message.toString(), Toast.LENGTH_SHORT).show()
-                }
-                is ResultMain.Loading -> {
-                    showLoading(it.isLoading)
-                }
+        viewModel.setDataUser()
+        viewModel.getDataUser()
+        viewModel.getSearchDataUser().observe(this) {
+            if (it != null) {
+                adapter.setData(it)
+                showLoading(false)
             }
         }
-
-        viewModel.getDataUser()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

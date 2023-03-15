@@ -13,7 +13,6 @@ class UserAdapter(
 ) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-
     fun setData(data: MutableList<GithubUserResponse.Item>) {
         this.data.clear()
         this.data.addAll(data)
@@ -27,9 +26,9 @@ class UserAdapter(
                 Glide.with(itemView)
                     .load(item.avatar_url)
                     .into(binding.imgPhoto)
+                txtUsername.text = item.id.toString()
+                txtName.text = item.login
             }
-            binding.txtUsername.text = item.id.toString()
-            binding.txtName.text = item.login
         }
     }
 

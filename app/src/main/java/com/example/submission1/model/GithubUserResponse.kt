@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 data class GithubUserResponse(
-    val incomplete_results: Boolean,
-    val items: MutableList<Item>,
-    val total_count: Int
-) {
+    val items: MutableList<Item>
+)
+
+{
     @Parcelize
     @Entity(tableName = "user")
     data class Item(
