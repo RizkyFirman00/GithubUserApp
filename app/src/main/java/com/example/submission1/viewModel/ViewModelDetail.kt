@@ -6,17 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.submission1.ResultMain
 import com.example.submission1.api.ApiClient
 import com.example.submission1.localData.DbModule
 import com.example.submission1.model.GithubDetailResponse
 import com.example.submission1.model.GithubUserResponse
-import com.example.submission1.model.User
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,29 +66,9 @@ class ViewModelDetail(private val db: DbModule) : ViewModel() {
                 }
 
             })
-//        viewModelScope.launch(Dispatchers.IO) {
-//            launch(Dispatchers.Main) {
-//                flow {
-//                    val response = ApiClient
-//                        .githubUserResponse
-//                        .getGithubDetail(username)
-//
-//                    emit(response)
-//                }.onStart {
-//                    resultDetailModel.value = ResultMain.Loading(true)
-//                }.onCompletion {
-//                    resultDetailModel.value = ResultMain.Loading(false)
-//                }.catch {
-//                    Log.e("Error", it.message.toString())
-//                    resultDetailModel.value = ResultMain.Error(it)
-//                }.collect {
-//                    resultDetailModel.value = ResultMain.Success(it)
-//                }
-//            }
-//        }
     }
 
-    fun getDataDetailUser() :LiveData<GithubDetailResponse>{
+    fun getDataDetailUser(): LiveData<GithubDetailResponse> {
         return resultDetailModel
     }
 
@@ -112,33 +85,17 @@ class ViewModelDetail(private val db: DbModule) : ViewModel() {
                     }
                 }
 
-                override fun onFailure(call: Call<MutableList<GithubUserResponse.Item>>, t: Throwable) {
+                override fun onFailure(
+                    call: Call<MutableList<GithubUserResponse.Item>>,
+                    t: Throwable
+                ) {
                     t.message?.let { Log.d("Error", it) }
                 }
 
             })
-//        viewModelScope.launch(Dispatchers.IO) {
-//            launch(Dispatchers.Main) {
-//                flow {
-//                    val response = ApiClient
-//                        .githubUserResponse
-//                        .getGithubDetailFollower(username)
-//
-//                    emit(response)
-//                }.onStart {
-//                    resultDetailFollowerModel.value = ResultMain.Loading(true)
-//                }.onCompletion {
-//                    resultDetailFollowerModel.value = ResultMain.Loading(false)
-//                }.catch {
-//                    Log.e("Error", it.message.toString())
-//                    resultDetailFollowerModel.value = ResultMain.Error(it)
-//                }.collect {
-//                    resultDetailFollowerModel.value = ResultMain.Success(it)
-//                }
-//            }
-//        }
     }
-    fun getDataDetailFollower() :LiveData<MutableList<GithubUserResponse.Item>>{
+
+    fun getDataDetailFollower(): LiveData<MutableList<GithubUserResponse.Item>> {
         return resultDetailFollowerModel
     }
 
@@ -155,13 +112,17 @@ class ViewModelDetail(private val db: DbModule) : ViewModel() {
                     }
                 }
 
-                override fun onFailure(call: Call<MutableList<GithubUserResponse.Item>>, t: Throwable) {
+                override fun onFailure(
+                    call: Call<MutableList<GithubUserResponse.Item>>,
+                    t: Throwable
+                ) {
                     t.message?.let { Log.d("Error", it) }
                 }
 
             })
     }
-    fun getDataDetailFollowing() :LiveData<MutableList<GithubUserResponse.Item>>{
+
+    fun getDataDetailFollowing(): LiveData<MutableList<GithubUserResponse.Item>> {
         return resultDetailFollowingModel
     }
 

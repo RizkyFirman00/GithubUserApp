@@ -3,7 +3,6 @@ package com.example.submission1.api
 import com.example.submission1.BuildConfig
 import com.example.submission1.model.GithubDetailResponse
 import com.example.submission1.model.GithubUserResponse
-import com.example.submission1.model.User
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,7 +12,7 @@ interface ApiService {
     @GET("users")
     @Headers("Authorization: ${BuildConfig.TOKEN}")
     fun getGithubMain(
-    ): Call<GithubUserResponse.Item>
+    ): Call<MutableList<GithubUserResponse.Item>>
 
     //Fungsi Search (Main)
     @GET("search/users")

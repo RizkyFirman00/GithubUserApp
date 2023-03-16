@@ -11,7 +11,7 @@ import retrofit2.Response
 
 class ViewModelMain(private val preferences: SettingPreferences) : ViewModel() {
 
-    val resultGetMainModel = MutableLiveData<GithubUserResponse.Item>()
+    val resultGetMainModel = MutableLiveData<MutableList<GithubUserResponse.Item>>()
     val resultMainModel = MutableLiveData<MutableList<GithubUserResponse.Item>>()
 
     fun getTheme() = preferences.getThemeSetting().asLiveData()
@@ -19,17 +19,20 @@ class ViewModelMain(private val preferences: SettingPreferences) : ViewModel() {
     fun setDataUser() {
         ApiClient.githubUserResponse
             .getGithubMain()
-            .enqueue(object : Callback<GithubUserResponse.Item> {
+            .enqueue(object : Callback<MutableList<GithubUserResponse.Item>> {
                 override fun onResponse(
-                    call: Call<GithubUserResponse.Item>,
-                    response: Response<GithubUserResponse.Item>
+                    call: Call<MutableList<GithubUserResponse.Item>>,
+                    response: Response<MutableList<GithubUserResponse.Item>>
                 ) {
                     if (response.isSuccessful) {
                         resultGetMainModel.postValue(response.body())
                     }
                 }
 
-                override fun onFailure(call: Call<GithubUserResponse.Item>, t: Throwable) {
+                override fun onFailure(
+                    call: Call<MutableList<GithubUserResponse.Item>>,
+                    t: Throwable
+                ) {
                     t.message?.let { Log.d("Error", it) }
                 }
 
@@ -37,7 +40,7 @@ class ViewModelMain(private val preferences: SettingPreferences) : ViewModel() {
     }
 
     fun getDataUser(): LiveData<MutableList<GithubUserResponse.Item>> {
-        return resultMainModel
+        return resultGetMainModel
     }
 
     fun searchUserData(username: String) {

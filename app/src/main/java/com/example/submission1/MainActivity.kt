@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.submission1.databinding.ActivityMainBinding
 import com.example.submission1.localData.SettingPreferences
+import com.example.submission1.model.GithubUserResponse
 import com.example.submission1.viewModel.ViewModelMain
 
 class MainActivity : AppCompatActivity() {
@@ -46,23 +47,32 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.title = resources.getString(R.string.title)
 
-        binding.rvPeople.layoutManager = LinearLayoutManager(this@MainActivity)
-        binding.rvPeople.setHasFixedSize(true)
-        binding.rvPeople.adapter = adapter
-
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
-                    showLoading(true)
-                    viewModel.searchUserData(query.toString())
+        binding.apply {
+            rvPeople.layoutManager = LinearLayoutManager(this@MainActivity)
+            rvPeople.setHasFixedSize(true)
+            rvPeople.adapter = adapter
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (query != null) {
+                        showLoading(true)
+                        viewModel.searchUserData(query.toString())
+                    }
+                    return true
                 }
-                return true
-            }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
-                return false
-            }
-        })
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    return false
+                }
+            })
+        }
+
+        viewModel.resultGetMainModel.observe(this) {
+            showLoading(true)
+            adapter.setData(it as MutableList<GithubUserResponse.Item>)
+            binding.rvPeople.adapter = adapter
+            showLoading(false)
+        }
+
         viewModel.setDataUser()
         viewModel.getDataUser()
         viewModel.getSearchDataUser().observe(this) {
