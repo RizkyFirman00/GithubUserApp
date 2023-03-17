@@ -1,12 +1,13 @@
 package com.example.submission1
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.ColorRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -18,14 +19,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+@Suppress("DEPRECATION", "NAME_SHADOWING")
 class DetailActivity : AppCompatActivity() {
 
-
     private lateinit var binding: ActivityDetailBinding
-    private val viewModel by viewModels<ViewModelDetail>{
+    private val viewModel by viewModels<ViewModelDetail> {
         ViewModelDetail.Factory(DbModule(this))
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -38,8 +40,8 @@ class DetailActivity : AppCompatActivity() {
         val username = item?.login ?: ""
 
         viewModel.setDataDetailUser(username)
-        viewModel.getDataDetailUser().observe(this){
-            if (it != null){
+        viewModel.getDataDetailUser().observe(this) {
+            if (it != null) {
                 binding.apply {
                     txtNameDetail.text = it.name
                     txtUsernameDetail.text = it.login
@@ -126,7 +128,7 @@ class DetailActivity : AppCompatActivity() {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    fun FloatingActionButton.changeIconColor(@ColorRes color:Int) {
+    private fun FloatingActionButton.changeIconColor(@ColorRes color: Int) {
         val color = ContextCompat.getColor(this.context, color)
         imageTintList = ColorStateList.valueOf(color)
     }
